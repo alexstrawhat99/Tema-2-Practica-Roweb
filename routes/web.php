@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\TasksController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,12 +35,22 @@ Route::middleware(['verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::middleware(['admin'])->group(function () {
-        Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users.all');
+        Route::get('/users', [AdminController::class, 'users'])->name('users.all');
+        Route::post('/user/update', [AdminController::class, 'updateUser'])->name('users.update');
+        Route::post('/user-update/{id}', [AdminController::class, 'updateUserAjax'])->name('users.update-ajax');
+        Route::post('/user/delete/{id}', [AdminController::class, 'deleteUser'])->name('users.delete');
     });
 
-    //ruta catre boards
+    Route::get('/boards', [BoardController::class, 'boards'])->name('boards.all');
+    Route::post('/board/update/{id}', [BoardController::class, 'updateBoard'])->name('boards.update');
+    Route::post('/board/delete/{id}', [BoardController::class, 'deleteBoard'])->name('boards.delete');
 
-    Route::middleware(['admin'])->group(function () {
-        Route::get('/boards', [\App\Http\Controllers\BoardsController::class, 'boards'])->name('boards.all');
-    });
+    Route::get('/board/{id}', [BoardController::class, 'board'])->name('board.view');
+
+//Ruta pentru Task
+    Route::get('/board', [TasksController::class, 'tasks'])->name('tasks.all');
+
+    Route::post('/tasks/update/{id}', [TasksController::class, 'updateTasks'])->name('tasks.update');
+    Route::post('/tasks/delete/{id}', [TasksController::class, 'deleteTasks'])->name('tasks.delete');
+
 });
