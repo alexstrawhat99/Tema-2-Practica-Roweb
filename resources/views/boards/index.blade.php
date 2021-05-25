@@ -25,6 +25,17 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Boards list</h3>
+
+
+                <form action="./addnewboard.blade.php">
+                    <input type="submit" value="Add a new Board!" />
+                </form>
+
+                <form action="./addnewtask.blade.php">
+                    <input type="submit" value="Add a new Task!" />
+                </form>
+
+
             </div>
 
             <div class="card-body">
@@ -50,20 +61,22 @@
                                     {{count($board->boardUsers)}}
                                 </td>
                                 <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-xs btn-primary"
-                                                type="button"
-                                                data-board="{{json_encode($board)}}"
-                                                data-toggle="modal"
-                                                data-target="#boardEditModal">
-                                            <i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-xs btn-danger"
-                                                type="button"
-                                                data-board="{{json_encode($board)}}"
-                                                data-toggle="modal"
-                                                data-target="#boardDeleteModal">
-                                            <i class="fas fa-trash"></i></button>
-                                    </div>
+                                    @if ($board->user->id === \Illuminate\Support\Facades\Auth::user()->id || \Illuminate\Support\Facades\Auth::user()->role === \App\Models\User::ROLE_ADMIN)
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-primary"
+                                                    type="button"
+                                                    data-board="{{json_encode($board)}}"
+                                                    data-toggle="modal"
+                                                    data-target="#boardEditModal">
+                                                <i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-danger"
+                                                    type="button"
+                                                    data-board="{{json_encode($board)}}"
+                                                    data-toggle="modal"
+                                                    data-target="#boardDeleteModal">
+                                                <i class="fas fa-trash"></i></button>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -115,7 +128,20 @@
                         </button>
                     </div>
                     <div class="modal-body">
-
+                        <div class="alert alert-danger hidden" id="boardEditAlert"></div>
+                        <input type="hidden" id="boardEditId" value="" />
+                        <div class="form-group">
+                            <label for="boardEditName">Name</label>
+                            <input type="text" class="form-control" id="boardEditName" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="boardEditUsers">Board Users</label>
+                            <select class="select2bs4" multiple="multiple" data-placeholder="Select board users" id="boardEditUsers" style="width: 100%;">
+                                @foreach ($userList as $user)
+                                    <option value="{{$user['id']}}">{{$user['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

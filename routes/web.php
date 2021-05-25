@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\TasksController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
@@ -47,10 +46,9 @@ Route::middleware(['verified'])->group(function () {
 
     Route::get('/board/{id}', [BoardController::class, 'board'])->name('board.view');
 
-//Ruta pentru Task
-    Route::get('/board', [TasksController::class, 'tasks'])->name('tasks.all');
+    Route::post('/task/update/{id}', [BoardController::class, 'updateTask'])->name('tasks.update');
+    Route::post('/task/delete/{id}', [BoardController::class, 'deleteTask'])->name('tasks.delete');
 
-    Route::post('/tasks/update/{id}', [TasksController::class, 'updateTasks'])->name('tasks.update');
-    Route::post('/tasks/delete/{id}', [TasksController::class, 'deleteTasks'])->name('tasks.delete');
-
+    Route::get('/addnewboard', [BoardController::class, 'boards'])->name('boards.all');
+    Route::get('/addnewtask', [BoardController::class, 'tasks'])->name('tasks.all');
 });
